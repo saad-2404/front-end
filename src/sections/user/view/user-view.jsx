@@ -1,10 +1,13 @@
 // import axios from 'axios';
 import { useState, useEffect } from 'react';
 
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
@@ -29,7 +32,7 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 
 export default function UserPage() {
   const [page, setPage] = useState(0);
-
+  
   const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
@@ -41,6 +44,24 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [users, setUsers] = useState([]);
+
+  // const FileUploadModal = () => {
+    // const classes = useStyles();
+    const [open, setOpen] = useState(false);
+  
+    const handleOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+  
+    const handleUpload = (event) => {
+      // Handle file upload logic here
+      console.log(event.target.files[0]);
+    };
+  // };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -115,9 +136,15 @@ export default function UserPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Campaigns</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" onClick={handleOpen}/>}>
           New Campaign
         </Button>
+        <Modal open={open} onClose={handleClose}>
+          <div>
+            <input type="file" onChange={handleUpload} />
+            <Button onClick={handleClose}>Close</Button>
+          </div>
+        </Modal>
       </Stack>
 
       <Card>
