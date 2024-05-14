@@ -1,5 +1,5 @@
 // import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -49,19 +49,17 @@ export default function UserPage() {
     // const classes = useStyles();
     const [open, setOpen] = useState(false);
   
-    const handleOpen = () => {
+    const handleOpen = useCallback(() => {
       setOpen(true);
-    };
+    }, []);
   
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
       setOpen(false);
-    };
+    }, []);
   
-    const handleUpload = (event) => {
-      // Handle file upload logic here
+    const handleUpload = useCallback((event) => {
       console.log(event.target.files[0]);
-    };
-  // };
+    }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -74,24 +72,24 @@ export default function UserPage() {
     fetchUsers();
   }, []);
 
-  const handleSort = (event, id) => {
+  const handleSort = useCallback((event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
       setOrder(isAsc ? 'desc' : 'asc');
       setOrderBy(id);
     }
-  };
+  }, [order, orderBy]);
 
-  const handleSelectAllClick = (event) => {
+  const handleSelectAllClick = useCallback((event) => {
     if (event.target.checked) {
       const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
-      return;
+    } else {
+      setSelected([]);
     }
-    setSelected([]);
-  };
+  }, [users]);
 
-  const handleClick = (event, name) => {
+  const handleClick = useCallback((event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
     if (selectedIndex === -1) {
@@ -107,7 +105,7 @@ export default function UserPage() {
       );
     }
     setSelected(newSelected);
-  };
+  }, [selected]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -118,10 +116,10 @@ export default function UserPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const handleFilterByName = (event) => {
+  const handleFilterByName = useCallback((event) => {
     setPage(0);
     setFilterName(event.target.value);
-  };
+  }, []);
 
   const dataFiltered = applyFilter({
     inputData: users,
